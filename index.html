@@ -105,7 +105,7 @@ const CONFIG = {
   // ---------- PENGATURAN WAKTU ----------
   defaultSeconds: 35,          // batas waktu per soal (detik) jika soal tidak punya batas sendiri
   autoNextOnTimeout: true,     // true = waktu habis, otomatis lanjut ke soal berikutnya
-  oneAttempt: true,            // psikotes hanya bisa dikerjakan 1 kali (per perangkat/browser)
+  oneAttempt: false,           // MASA UJI COBA: false. Ubah ke true saat sudah siap dipakai kandidat (1 kali per perangkat/browser)
   lockAfterStart: true,        // true = jika halaman ditutup/dimuat ulang setelah dimulai, tidak bisa diulang
   storageKey: 'luzie_psikotes_v1',
   allowBack: false,            // soal yang sudah lewat tidak bisa dibuka kembali
@@ -318,7 +318,7 @@ function renderIdentity(){
       <ul>
         <li>Setiap soal dibatasi waktu <b>${CONFIG.defaultSeconds} detik</b>.</li>
         <li>Jika waktu terlewat, soal otomatis berpindah ke soal berikutnya dan jawaban yang belum dipilih dianggap kosong. Hal ini akan <b>memengaruhi hasil psikotes</b> Anda.</li>
-        <li>Psikotes ini hanya dapat dikerjakan <b>satu kali</b>. Jangan menutup atau memuat ulang halaman setelah dimulai.</li>
+        ${CONFIG.oneAttempt?'<li>Psikotes ini hanya dapat dikerjakan <b>satu kali</b>. Jangan menutup atau memuat ulang halaman setelah dimulai.</li>':''}
       </ul></div>
     <div style="font-size:13px;color:var(--muted)"><span class="req">*</span> Menunjukkan pertanyaan yang wajib diisi</div>
   </section>
