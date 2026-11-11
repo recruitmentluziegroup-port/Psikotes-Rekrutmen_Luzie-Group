@@ -123,20 +123,86 @@ const CONFIG = {
   // ---------- BAGIAN 1 : pilih yang PALING dan PALING TIDAK menggambarkan diri ----------
   bagian1: {
     title: "Bagian 1",
-    instruction: "12 kelompok pernyataan — pilih pernyataan yang paling dan yang paling tidak menggambarkan diri Anda.",
+    instruction: "Bagian ini terdiri dari 12 kelompok pernyataan. Setiap kelompok berisi 4 pernyataan tentang diri Anda dalam situasi kerja sehari-hari. Untuk setiap kelompok, pilih 1 pernyataan yang PALING menggambarkan diri Anda, dan 1 pernyataan yang PALING TIDAK menggambarkan diri Anda. Tidak ada jawaban yang benar atau salah — jawablah dengan jujur sesuai keadaan Anda yang sebenarnya. Jangan terlalu lama berpikir; jawaban pertama yang terlintas biasanya yang paling tepat. Pastikan semua kelompok terisi lengkap.",
+    unit: "Kelompok",
     // Contoh isi (hapus tanda komentar & sesuaikan dengan soal asli):
     // { statements: ["pernyataan A","pernyataan B","pernyataan C","pernyataan D"],
     //   entryMost: "entry.111111111", entryLeast: "entry.222222222" },
-    items: []
+    items: [
+      { statements: ["Cepat mengambil keputusan saat dibutuhkan", "Senang berkenalan dengan orang baru", "Sabar menyelesaikan pekerjaan sampai tuntas", "Memeriksa detail sebelum menyerahkan hasil kerja"], entryMost: "entry.XXXXXXXXX", entryLeast: "entry.XXXXXXXXX" },
+      { statements: ["Mudah membangkitkan semangat rekan kerja", "Nyaman bekerja dengan ritme yang teratur", "Suka mengolah data sebelum menyimpulkan", "Berani menyampaikan pendapat di rapat"], entryMost: "entry.XXXXXXXXX", entryLeast: "entry.XXXXXXXXX" },
+      { statements: ["Tenang menghadapi situasi kerja yang menekan", "Mengikuti prosedur kerja secara cermat", "Fokus pada target yang harus dicapai", "Senang bercerita dan berbagi pengalaman"], entryMost: "entry.XXXXXXXXX", entryLeast: "entry.XXXXXXXXX" },
+      { statements: ["Teliti memeriksa angka dan dokumen", "Suka memimpin jalannya sebuah proyek", "Mudah bergaul dengan berbagai tipe orang", "Setia membantu tim dalam jangka panjang"], entryMost: "entry.XXXXXXXXX", entryLeast: "entry.XXXXXXXXX" },
+      { statements: ["Tidak ragu mengambil risiko yang terukur", "Konsisten menjaga mutu kerja dari hari ke hari", "Pandai meyakinkan orang lewat penjelasan yang menarik", "Menyusun rencana kerja secara sistematis"], entryMost: "entry.XXXXXXXXX", entryLeast: "entry.XXXXXXXXX" },
+      { statements: ["Antusias saat bekerja dalam kelompok", "Memastikan pekerjaan sesuai standar mutu", "Mendengarkan keluhan rekan dengan sabar", "Berorientasi pada hasil akhir yang nyata"], entryMost: "entry.XXXXXXXXX", entryLeast: "entry.XXXXXXXXX" },
+      { statements: ["Lebih suka lingkungan kerja yang harmonis", "Percaya diri berbicara di depan banyak orang", "Cepat bertindak ketika ada masalah mendesak", "Suka meneliti penyebab suatu persoalan"], entryMost: "entry.XXXXXXXXX", entryLeast: "entry.XXXXXXXXX" },
+      { statements: ["Berhati-hati sebelum menyetujui suatu usulan", "Tekun mengerjakan tugas yang berulang", "Senang mendapat pengakuan dari lingkungan kerja", "Menetapkan prioritas dengan tegas"], entryMost: "entry.XXXXXXXXX", entryLeast: "entry.XXXXXXXXX" },
+      { statements: ["Mudah memulai percakapan dengan siapa saja", "Suka tantangan yang memacu prestasi", "Merapikan berkas dan catatan secara teratur", "Mengutamakan kerja sama daripada persaingan"], entryMost: "entry.XXXXXXXXX", entryLeast: "entry.XXXXXXXXX" },
+      { statements: ["Berani mengambil alih tanggung jawab yang besar", "Mempertimbangkan fakta secara mendalam sebelum bertindak", "Dapat diandalkan menjaga komitmen jangka panjang", "Menyukai suasana kerja yang hidup dan ramai"], entryMost: "entry.XXXXXXXXX", entryLeast: "entry.XXXXXXXXX" },
+      { statements: ["Sabar melatih rekan yang masih belajar", "Mengejar target dengan penuh semangat", "Senang dikenal luas di lingkungan kerja", "Cermat mencatat setiap perkembangan pekerjaan"], entryMost: "entry.XXXXXXXXX", entryLeast: "entry.XXXXXXXXX" },
+      { statements: ["Suka bekerja berdasarkan data dan bukti", "Optimistis menghadapi tugas baru", "Mandiri dalam menentukan langkah kerja", "Lebih suka perubahan yang berjalan bertahap"], entryMost: "entry.XXXXXXXXX", entryLeast: "entry.XXXXXXXXX" }
+    ]
   },
 
   // ---------- BAGIAN 2 : pilih satu pernyataan dari sepasang ----------
   bagian2: {
     title: "Bagian 2",
-    instruction: "50 pasang pernyataan — pilih satu pernyataan yang paling menggambarkan diri Anda.",
+    instruction: "Pada bagian ini Anda akan menemukan 50 pasang pernyataan. Untuk setiap pasang, pilih SATU pernyataan yang paling menggambarkan diri Anda dalam konteks pekerjaan. Tidak ada jawaban benar atau salah. Jawablah dengan jujur dan spontan — pilih jawaban yang pertama kali terlintas, jangan terlalu lama memikirkan satu nomor. Semua pasangan harus dijawab, tidak boleh ada yang terlewat.",
+    unit: "Pasangan",
     // Contoh isi:
     // { statements: ["pernyataan A","pernyataan B"], entry: "entry.333333333" },
-    items: []
+    items: [
+      { statements: ["Saya merasa lega hanya setelah pekerjaan benar-benar selesai.", "Saya merasa tidak nyaman jika dikucilkan dari kelompok."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya bersedia bekerja lebih lama demi menyelesaikan pekerjaan penting.", "Saya ingin memiliki teman yang benar-benar dekat di tempat kerja."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya ingin mencapai hasil yang lebih baik dari target yang ditetapkan.", "Saya menyukai segala sesuatu yang tersusun dan tertata dengan baik."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya merasa nyaman memimpin sebuah kelompok kerja.", "Saya meluangkan waktu untuk memastikan tidak ada hal yang terlewat."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya ingin memastikan pekerjaan orang lain berjalan sesuai rencana.", "Saya berusaha berpikir logis dan sistematis dalam menghadapi masalah."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya dapat memutuskan sesuatu dengan cepat tanpa berlama-lama ragu.", "Saya mudah beradaptasi dengan situasi kerja yang baru."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya suka bekerja dengan tempo yang cepat.", "Saya tidak mudah terpancing emosi saat dikritik."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya suka pekerjaan yang membuat saya banyak bergerak.", "Saya berani menolak permintaan yang menurut saya tidak masuk akal."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya senang ketika hasil kerja saya diketahui banyak orang.", "Saya suka berkonsultasi dengan atasan sebelum memutuskan hal yang penting."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya mudah memulai percakapan dengan orang yang baru dikenal.", "Saya merasa aman jika tanggung jawab saya dijelaskan dengan jelas."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya merasa senang menjadi bagian dari sebuah tim.", "Saya merasa terganggu jika masih ada pekerjaan yang belum selesai."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya membutuhkan hubungan yang akrab dengan rekan kerja.", "Saya tetap bekerja dengan sungguh-sungguh meski tidak ada yang mengawasi."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya suka menyusun jadwal kerja secara teratur.", "Keberhasilan dalam karier adalah hal yang penting bagi saya."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya memperhatikan detail-detail kecil dalam pekerjaan saya.", "Saya berani tampil di depan untuk menyampaikan rencana tim."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya suka menganalisis masalah sebelum mencari solusinya.", "Saya lebih tenang jika saya yang menentukan pembagian tugas dalam tim."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya menyukai pekerjaan yang bervariasi dari hari ke hari.", "Saya tetap tenang saat harus mengambil keputusan yang mendesak."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya dapat menahan emosi saat menghadapi rekan yang menyebalkan.", "Saya bergerak dan berpikir dengan cepat saat bekerja."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya berani menyampaikan pendapat yang berbeda dari kebanyakan orang.", "Saya memiliki stamina yang baik untuk aktivitas kerja seharian."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya membutuhkan dukungan dari atasan untuk merasa yakin dalam bekerja.", "Saya ingin kehadiran saya terasa berarti bagi tim."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya merasa nyaman bekerja dengan aturan yang jelas.", "Saya merasa nyaman menghadiri acara yang melibatkan banyak orang."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya tidak suka meninggalkan tugas dalam keadaan setengah jadi.", "Saya suka kegiatan yang dilakukan bersama-sama dengan tim."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya tidak mudah menyerah saat pekerjaan terasa berat.", "Saya merasa nyaman bekerja dengan orang yang peduli secara pribadi."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya bercita-cita menempati posisi yang lebih tinggi dalam pekerjaan.", "Saya mengikuti urutan langkah kerja yang sudah saya susun."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya bersedia mengambil peran sebagai ketua tim.", "Saya teliti membaca dokumen sebelum menyetujuinya."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya merasa perlu mengawasi cara rekan kerja menyelesaikan tugasnya.", "Saya senang mempelajari teori yang berkaitan dengan pekerjaan saya."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya berani memilih di antara beberapa pilihan yang sama-sama sulit.", "Saya suka berpindah tugas agar mendapat pengalaman yang berbeda."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya merasa bersemangat saat pekerjaan menuntut kecepatan.", "Saya memilih diam sejenak sebelum menanggapi hal yang membuat saya marah."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya merasa berenergi saat hari kerja dipenuhi berbagai kegiatan.", "Saya menyampaikan kritik secara langsung kepada orang yang bersangkutan."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya ingin orang lain menyadari kontribusi saya dalam tim.", "Pujian dari atasan sangat berarti bagi saya."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya senang bekerja di lingkungan yang ramai dan banyak orang.", "Saya lebih suka diberi arahan daripada menentukan sendiri cara kerja saya."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya ingin diterima dengan baik oleh kelompok kerja saya.", "Saya membuat daftar tugas agar tidak ada pekerjaan yang terlewat."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya senang jika ada rekan yang memperhatikan keadaan saya.", "Sesekali mengurangi waktu istirahat demi target tim bukan masalah bagi saya."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya merasa nyaman bekerja dengan sistem yang rapi.", "Saya terdorong untuk terus meningkatkan kemampuan agar bisa lebih unggul."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya memeriksa angka dan data dengan sangat hati-hati.", "Saya merasa cocok menjadi penanggung jawab sebuah kegiatan."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya senang membaca hal-hal baru untuk menambah pengetahuan.", "Saya ingin orang lain mengikuti cara kerja yang saya anggap benar."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya cepat bosan dengan pekerjaan yang itu-itu saja.", "Saya jarang mengubah keputusan yang sudah saya ambil."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya tetap tenang ketika pekerjaan tidak berjalan sesuai rencana.", "Saya merasa puas jika bisa menyelesaikan pekerjaan lebih cepat dari jadwal."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya akan mengatakan tidak setuju jika saya memang tidak setuju.", "Saya suka terlibat dalam beberapa kegiatan dalam satu waktu."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya senang jika atasan memberikan perhatian pada pekerjaan saya.", "Saya merasa kecewa jika kerja keras saya tidak ada yang menyadari."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya suka jika ada petunjuk kerja yang rinci dan pasti.", "Saya mudah bergaul dengan orang dari berbagai latar belakang."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya selalu memeriksa kembali hasil pekerjaan sebelum mengumpulkannya.", "Saya berusaha menjaga keharmonisan di dalam kelompok."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya tetap tekun meski kemajuan pekerjaan berjalan lambat.", "Dukungan emosional dari rekan kerja penting bagi saya."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya merasa bangga ketika prestasi kerja saya diakui orang lain.", "Ketidakteraturan membuat saya sulit berkonsentrasi."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Rekan kerja sering meminta pendapat saya ketika kelompok sedang bingung.", "Saya mudah menemukan kesalahan ketik atau angka yang tampak tidak wajar."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya suka memberi arahan yang rinci kepada orang yang saya bimbing.", "Saya suka mempertanyakan alasan di balik sebuah aturan."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya tidak membutuhkan waktu lama untuk menentukan sikap.", "Rutinitas yang sama setiap hari terasa membosankan bagi saya."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya terbiasa menyelesaikan tugas dalam waktu yang singkat.", "Saya berusaha tidak membawa perasaan pribadi ke dalam pekerjaan."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya lebih suka tugas lapangan daripada duduk diam sepanjang hari.", "Saya tidak mudah goyah oleh tekanan dari orang lain."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya merasa senang saat pimpinan menyebut nama saya dalam rapat.", "Saya menghargai hubungan yang baik dengan atasan."], entry: "entry.XXXXXXXXX" },
+      { statements: ["Saya cepat merasa akrab dengan rekan kerja yang baru.", "Aturan yang jelas membantu saya bekerja dengan baik."], entry: "entry.XXXXXXXXX" }
+    ]
   }
 };
 /* ===================== AKHIR PENGATURAN ===================== */
@@ -178,8 +244,11 @@ function configIssues(){
   Object.entries(CONFIG.entries).forEach(([k,v])=>{ if(/X{3,}/.test(v)) out.push('ID kolom identitas "'+k+'" belum diisi'); });
   if(!CONFIG.bagian1.items.length) out.push('Soal Bagian 1 belum diisi');
   if(!CONFIG.bagian2.items.length) out.push('Soal Bagian 2 belum diisi');
-  CONFIG.bagian1.items.forEach((it,i)=>{ if(!it.entryMost||!it.entryLeast) out.push('Bagian 1 soal '+(i+1)+': entry belum diisi'); });
-  CONFIG.bagian2.items.forEach((it,i)=>{ if(!it.entry) out.push('Bagian 2 soal '+(i+1)+': entry belum diisi'); });
+  const x = v => !v || /X{3,}/.test(v);
+  const m1 = CONFIG.bagian1.items.filter(it => x(it.entryMost) || x(it.entryLeast)).length;
+  const m2 = CONFIG.bagian2.items.filter(it => x(it.entry)).length;
+  if(m1) out.push('ID kolom Bagian 1 belum diisi ('+m1+' kelompok)');
+  if(m2) out.push('ID kolom Bagian 2 belum diisi ('+m2+' pasangan)');
   return out;
 }
 
@@ -274,7 +343,7 @@ function renderQuestion(st){
 
   let body = '';
   if(st.n===1){
-    body = `<p class="hint">Pilih satu pernyataan yang <b>paling</b> dan satu yang <b>paling tidak</b> menggambarkan diri Anda.</p>` +
+    body = `<p class="hint">Pilih 1 pernyataan yang <b>PALING</b> menggambarkan diri Anda, dan 1 pernyataan yang <b>PALING TIDAK</b> menggambarkan diri Anda.</p>` +
       it.statements.map((t,k)=>`<div class="grp"><div class="txt">${esc(t)}</div>
         <div class="pick"><button class="m ${cur.most===k?'on':''}" data-k="${k}" data-r="most">Paling</button>
         <button class="l ${cur.least===k?'on':''}" data-k="${k}" data-r="least">Paling tidak</button></div></div>`).join('');
@@ -287,7 +356,7 @@ function renderQuestion(st){
     <div class="tbar"><span class="tag">${esc(sec.title)}</span>
       <span class="chip" id="chip"><span id="sisa">${secs}</span> detik</span></div>
     <div class="pbar" id="pbar"><div id="fill"></div></div>
-    <div class="qno">Soal ${st.i+1} dari ${total}</div>
+    <div class="qno">${esc(sec.unit)} ${st.i+1} dari ${total}</div>
     ${body}
     <div class="row">
       ${CONFIG.allowBack && S.pos>1 ? '<button class="btn ghost" id="prev">Kembali</button>' : '<span></span>'}
