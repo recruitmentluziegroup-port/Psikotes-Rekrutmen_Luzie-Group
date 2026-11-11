@@ -30,6 +30,9 @@ main{max-width:760px;margin:-52px auto 60px;padding:0 16px}
 .intro li{margin-bottom:4px}
 .note{border-left:3px solid var(--gold);background:var(--gold-soft);padding:12px 16px;border-radius:0 10px 10px 0;font-size:14px;margin:14px 0}
 .req{color:var(--danger)}
+.announce{border-left-color:var(--danger);background:#fdf3f2}
+.announce b{color:#8c1d18}
+.announce ul{margin:6px 0 0;padding-left:18px}
 .steps{display:flex;gap:8px;margin-bottom:20px}
 .steps span{flex:1;height:4px;border-radius:4px;background:var(--line)}
 .steps span.on{background:var(--gold)}
@@ -96,9 +99,15 @@ const CONFIG = {
   // ID formulir (sudah terisi dari link formulir Anda)
   formId: "1FAIpQLSd7sRF3LV8HSj2E4bHcjv5mFLZ-o7HCAbQW_Ff8VCwDKUXvXw",
 
+  // Alamat web app Apps Script (hasil Deploy). Jika diisi, ID kolom di bawah TIDAK diperlukan.
+  scriptUrl: "https://script.google.com/macros/s/AKfycbx3maH3m42piEhRxZGRMXmYUl27pdFPHcmeJqySdXsGIxInriP41h2PfFITR8-jIyXs/exec",
+
   // ---------- PENGATURAN WAKTU ----------
-  defaultSeconds: 30,          // batas waktu per soal (detik) jika soal tidak punya batas sendiri
+  defaultSeconds: 35,          // batas waktu per soal (detik) jika soal tidak punya batas sendiri
   autoNextOnTimeout: true,     // true = waktu habis, otomatis lanjut ke soal berikutnya
+  oneAttempt: true,            // psikotes hanya bisa dikerjakan 1 kali (per perangkat/browser)
+  lockAfterStart: true,        // true = jika halaman ditutup/dimuat ulang setelah dimulai, tidak bisa diulang
+  storageKey: 'luzie_psikotes_v1',
   allowBack: false,            // soal yang sudah lewat tidak bisa dibuka kembali
   // Batas waktu khusus per bagian (kosongkan/null untuk memakai defaultSeconds)
   sectionSeconds: { 1: null, 2: null },
@@ -208,6 +217,7 @@ const CONFIG = {
 /* ===================== AKHIR PENGATURAN ===================== */
 
 const $app = document.getElementById('app');
+const PREVIEW = /[?&]preview=1/.test(location.search);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 const intro = {
@@ -241,14 +251,15 @@ const S = { pos:0, id:{nama:'',email:'',hp:'',posisi:'',lainnya:''}, a1:{}, a2:{
 
 function configIssues(){
   const out=[];
-  Object.entries(CONFIG.entries).forEach(([k,v])=>{ if(/X{3,}/.test(v)) out.push('ID kolom identitas "'+k+'" belum diisi'); });
+  if(!CONFIG.scriptUrl) Object.entries(CONFIG.entries).forEach(([k,v])=>{ if(/X{3,}/.test(v)) out.push('ID kolom identitas "'+k+'" belum diisi'); });
+  if(CONFIG.scriptUrl && !/^https:\/\/script\.google\.com\//.test(CONFIG.scriptUrl)) out.push('scriptUrl tidak valid');
   if(!CONFIG.bagian1.items.length) out.push('Soal Bagian 1 belum diisi');
   if(!CONFIG.bagian2.items.length) out.push('Soal Bagian 2 belum diisi');
   const x = v => !v || /X{3,}/.test(v);
   const m1 = CONFIG.bagian1.items.filter(it => x(it.entryMost) || x(it.entryLeast)).length;
   const m2 = CONFIG.bagian2.items.filter(it => x(it.entry)).length;
-  if(m1) out.push('ID kolom Bagian 1 belum diisi ('+m1+' kelompok)');
-  if(m2) out.push('ID kolom Bagian 2 belum diisi ('+m2+' pasangan)');
+  if(m1 && !CONFIG.scriptUrl) out.push('ID kolom Bagian 1 belum diisi ('+m1+' kelompok)');
+  if(m2 && !CONFIG.scriptUrl) out.push('ID kolom Bagian 2 belum diisi ('+m2+' pasangan)');
   return out;
 }
 
@@ -256,6 +267,26 @@ function secSeconds(step){
   const sec = CONFIG['bagian'+step.n];
   const it = sec.items[step.i];
   return it.seconds || CONFIG.sectionSeconds[step.n] || CONFIG.defaultSeconds;
+}
+
+function lsGet(){ try{ return JSON.parse(localStorage.getItem(CONFIG.storageKey)||'null'); }catch(e){ return null; } }
+function lsSet(v){ if(PREVIEW || !CONFIG.oneAttempt) return; try{ localStorage.setItem(CONFIG.storageKey, JSON.stringify(v)); }catch(e){} }
+function showBlocked(kind){
+  const m = {
+    done:    ['Anda sudah mengerjakan psikotes ini','Psikotes hanya dapat dikerjakan satu kali. Jawaban Anda sudah kami terima, terima kasih.'],
+    dup:     ['Jawaban sudah pernah terkirim','Email atau nomor HP ini sudah tercatat mengirim jawaban. Psikotes hanya dapat dikerjakan satu kali.'],
+    started: ['Sesi psikotes sudah dimulai','Psikotes hanya dapat dikerjakan satu kali dan tidak dapat diulang. Jika Anda mengalami kendala teknis, silakan hubungi tim rekrutmen Luzie Group.']
+  }[kind];
+  $app.innerHTML = `<section class="card done"><h2>${m[0]}</h2><p class="sub" style="margin:0">${m[1]}</p></section>`;
+}
+function boot(){
+  window.addEventListener('beforeunload', e => { if(S.active){ e.preventDefault(); e.returnValue=''; } });
+  if(CONFIG.oneAttempt && !PREVIEW){
+    const f = lsGet();
+    if(f && f.done) return showBlocked('done');
+    if(f && f.started && CONFIG.lockAfterStart) return showBlocked('started');
+  }
+  render();
 }
 
 function stopTimer(){ if(S.timer){ clearInterval(S.timer); S.timer=null; } }
@@ -271,10 +302,11 @@ function render(){
 
 function renderIdentity(){
   const issues = configIssues();
+  if(issues.length) console.warn('Pengaturan belum lengkap:', issues);
   const opts = CONFIG.posisiOptions.map(o=>`<option ${S.id.posisi===o?'selected':''}>${esc(o)}</option>`).join('')
              + `<option ${S.id.posisi==='Lainnya'?'selected':''}>Lainnya</option>`;
   $app.innerHTML = `
-  ${issues.length?`<div class="warn"><b>Pengaturan belum lengkap.</b> Buka file HTML ini dan lengkapi bagian PENGATURAN:<ul style="margin:8px 0 0;padding-left:18px">${issues.slice(0,6).map(i=>`<li>${esc(i)}</li>`).join('')}${issues.length>6?`<li>dan ${issues.length-6} lainnya</li>`:''}</ul></div>`:''}
+  
   <section class="card intro">
     <p><b>${esc(intro.head)}</b></p>
     <p>${esc(intro.lead)}</p>
@@ -282,6 +314,12 @@ function renderIdentity(){
     <p>${esc(intro.rulesHead)}</p>
     <ul>${intro.rules.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>
     <div class="note">${esc(intro.foot)}</div>
+    <div class="note announce"><b>Pengumuman penting</b>
+      <ul>
+        <li>Setiap soal dibatasi waktu <b>${CONFIG.defaultSeconds} detik</b>.</li>
+        <li>Jika waktu terlewat, soal otomatis berpindah ke soal berikutnya dan jawaban yang belum dipilih dianggap kosong. Hal ini akan <b>memengaruhi hasil psikotes</b> Anda.</li>
+        <li>Psikotes ini hanya dapat dikerjakan <b>satu kali</b>. Jangan menutup atau memuat ulang halaman setelah dimulai.</li>
+      </ul></div>
     <div style="font-size:13px;color:var(--muted)"><span class="req">*</span> Menunjukkan pertanyaan yang wajib diisi</div>
   </section>
   <section class="card">
@@ -299,7 +337,7 @@ function renderIdentity(){
       <input type="text" id="lainnya" placeholder="Tuliskan posisi lainnya" style="margin-top:8px;display:${S.id.posisi==='Lainnya'?'block':'none'}" value="${esc(S.id.lainnya)}">
       <div class="err">Ini adalah pertanyaan wajib</div></div>
     <div class="row"><span style="font-size:13px;color:var(--muted)">Halaman 1 dari ${seq.filter(s=>s.t==='intro').length+1}</span>
-      <button class="btn" id="next" ${issues.length?'disabled':''}>Berikutnya</button></div>
+      <button class="btn" id="next" ${issues.length && !PREVIEW?'disabled':''}>Berikutnya</button></div>
   </section>`;
   const sel = document.getElementById('posisi');
   sel.onchange = () => { document.getElementById('lainnya').style.display = sel.value==='Lainnya'?'block':'none'; };
@@ -313,7 +351,7 @@ function renderIdentity(){
     };
     Object.keys(bad).forEach(k=>document.getElementById('f-'+k).classList.toggle('bad',bad[k]));
     if(Object.values(bad).some(Boolean)){ document.querySelector('.field.bad')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
-    S.id = v; S.pos++; window.scrollTo({top:0}); render();
+    S.id = v; lsSet({started:true,t:Date.now()}); S.active = true; S.pos++; window.scrollTo({top:0}); render();
   };
 }
 
@@ -325,7 +363,7 @@ function renderSectionIntro(st){
     <div class="steps"><span class="on"></span><span class="${st.n>=1?'on':''}"></span><span class="${st.n>=2?'on':''}"></span></div>
     <h2>${esc(sec.title)}</h2>
     <p class="sub">${esc(sec.instruction)}</p>
-    <div class="note">Setiap soal memiliki batas waktu sekitar <b>${secs} detik</b>. Saat waktu habis, soal akan lanjut otomatis${CONFIG.allowBack?'':' dan tidak dapat dibuka kembali'}. Timer dimulai setelah Anda menekan tombol di bawah.</div>
+    <div class="note announce"><b>Batas waktu ${secs} detik per soal.</b> Jika terlewat, soal otomatis berpindah ke soal berikutnya dan memengaruhi hasil psikotes Anda. Timer dimulai setelah Anda menekan tombol di bawah.</div>
     <div class="row"><span></span><button class="btn" id="go">Mulai ${esc(sec.title)}</button></div>
   </section>`;
   document.getElementById('go').onclick = () => { S.pos++; window.scrollTo({top:0}); render(); };
@@ -410,8 +448,42 @@ function renderQuestion(st){
   S.timer = setInterval(tick, 200);
 }
 
+function showDone(){
+  S.active = false; lsSet({done:true});
+  $app.innerHTML = `<section class="card done"><div class="ic">✓</div><h2>Jawaban Anda telah terkirim</h2>
+    <p class="sub" style="margin:0">Terima kasih telah mengikuti psikotes rekrutmen Luzie Group. Tim kami akan menghubungi Anda sesuai informasi pada email undangan.</p></section>`;
+}
+function showFail(msg){
+  $app.innerHTML = `<section class="card done"><h2>Pengiriman gagal</h2>
+    <p class="sub">${esc(msg||'Periksa koneksi internet Anda, lalu coba kirim lagi.')}</p>
+    <button class="btn" id="retry">Kirim ulang</button></section>`;
+  document.getElementById('retry').onclick = submitAll;
+}
+if(!S.sid) S.sid = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now())+Math.random().toString(16).slice(2);
+
 async function submitAll(){
+  if(PREVIEW){
+    $app.innerHTML = `<section class="card done"><div class="ic">✓</div><h2>Mode pratinjau selesai</h2>
+      <p class="sub" style="margin:0">Jawaban tidak dikirim ke Google Form. Lengkapi ID kolom di bagian PENGATURAN, lalu buka halaman tanpa <code>?preview=1</code>.</p></section>`;
+    return;
+  }
   $app.innerHTML = `<section class="card done"><div class="spin"></div><h2>Mengirim jawaban…</h2><p class="sub">Jangan tutup halaman ini.</p></section>`;
+  if(CONFIG.scriptUrl){
+    const payload = {
+      sid: S.sid,
+      identity: {nama:S.id.nama, email:S.id.email, hp:S.id.hp, posisi:S.id.posisi, lainnya:S.id.lainnya},
+      b1: CONFIG.bagian1.items.map((it,i)=>{ const a=S.a1[i]||{}; return {most:a.most!=null?it.statements[a.most]:'', least:a.least!=null?it.statements[a.least]:''}; }),
+      b2: CONFIG.bagian2.items.map((it,i)=>{ const a=S.a2[i]||{}; return a.pick!=null?it.statements[a.pick]:''; })
+    };
+    try{
+      const r = await fetch(CONFIG.scriptUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+      const j = await r.json();
+      if(j.code==='dup'){ S.active=false; lsSet({done:true}); showBlocked('dup'); return; }
+      if(!j.ok) throw new Error(j.error||'Server menolak kiriman');
+      showDone();
+    }catch(e){ showFail('Jawaban belum terkirim. Periksa koneksi internet Anda, lalu coba kirim lagi.'); }
+    return;
+  }
   const E = CONFIG.entries, body = new URLSearchParams();
   body.append(E.nama, S.id.nama);
   body.append(E.email, S.id.email);
@@ -444,7 +516,7 @@ async function submitAll(){
   }
 }
 
-render();
+boot();
 </script>
 </body>
 </html>
