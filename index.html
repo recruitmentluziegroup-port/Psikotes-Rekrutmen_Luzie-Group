@@ -453,9 +453,10 @@ function showDone(){
   $app.innerHTML = `<section class="card done"><div class="ic">✓</div><h2>Jawaban Anda telah terkirim</h2>
     <p class="sub" style="margin:0">Terima kasih telah mengikuti psikotes rekrutmen Luzie Group. Tim kami akan menghubungi Anda sesuai informasi pada email undangan.</p></section>`;
 }
-function showFail(msg){
+function showFail(msg, detail){
   $app.innerHTML = `<section class="card done"><h2>Pengiriman gagal</h2>
     <p class="sub">${esc(msg||'Periksa koneksi internet Anda, lalu coba kirim lagi.')}</p>
+    ${detail?`<p style="font-size:12px;color:var(--text-muted);margin:0 0 14px;word-break:break-word">Keterangan teknis: ${esc(detail)}</p>`:''}
     <button class="btn" id="retry">Kirim ulang</button></section>`;
   document.getElementById('retry').onclick = submitAll;
 }
@@ -481,7 +482,7 @@ async function submitAll(){
       if(j.code==='dup'){ S.active=false; lsSet({done:true}); showBlocked('dup'); return; }
       if(!j.ok) throw new Error(j.error||'Server menolak kiriman');
       showDone();
-    }catch(e){ showFail('Jawaban belum terkirim. Periksa koneksi internet Anda, lalu coba kirim lagi.'); }
+    }catch(e){ console.error('Kirim gagal:', e); showFail('Jawaban belum terkirim. Periksa koneksi internet Anda, lalu coba kirim lagi.', (e && e.message) ? e.message : String(e)); }
     return;
   }
   const E = CONFIG.entries, body = new URLSearchParams();
