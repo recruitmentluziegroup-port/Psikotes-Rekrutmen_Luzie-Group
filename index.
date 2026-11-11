@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Psikotes Rekrutmen — Luzie Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f2238; --navy-2:#1b3556; --gold:#b8934a; --gold-soft:#f4ecdb;
+  --ink:#1c2733; --muted:#66727f; --line:#e3e7ec; --bg:#f5f6f8; --card:#ffffff;
+  --danger:#b3261e; --ok:#1f7a55; --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);color:#fff;padding:44px 20px 84px}
+.wrap{max-width:760px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#d9c08a;margin-bottom:14px}
+.brand i{display:inline-block;width:28px;height:1px;background:#d9c08a}
+.hero h1{font-family:'Playfair Display',Georgia,serif;font-weight:600;font-size:clamp(26px,5vw,36px);line-height:1.25;margin:0}
+main{max-width:760px;margin:-52px auto 60px;padding:0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:0 10px 30px rgba(15,34,56,.07);margin-bottom:18px}
+.card h2{font-family:'Playfair Display',Georgia,serif;font-weight:600;font-size:22px;margin:0 0 6px;color:var(--navy)}
+.sub{color:var(--muted);font-size:14px;margin:0 0 18px}
+.intro p{margin:0 0 10px;font-size:15px}
+.intro ul{margin:0 0 12px;padding-left:20px;font-size:15px}
+.intro li{margin-bottom:4px}
+.note{border-left:3px solid var(--gold);background:var(--gold-soft);padding:12px 16px;border-radius:0 10px 10px 0;font-size:14px;margin:14px 0}
+.req{color:var(--danger)}
+.steps{display:flex;gap:8px;margin-bottom:20px}
+.steps span{flex:1;height:4px;border-radius:4px;background:var(--line)}
+.steps span.on{background:var(--gold)}
+label.f{display:block;font-weight:500;font-size:14px;margin-bottom:6px}
+.field{margin-bottom:18px}
+input[type=text],input[type=email],input[type=tel],select{width:100%;font:inherit;font-size:15px;padding:12px 14px;border:1px solid #cfd6de;border-radius:10px;background:#fff;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus{outline:none;border-color:var(--navy-2);box-shadow:0 0 0 3px rgba(27,53,86,.12)}
+.err{color:var(--danger);font-size:13px;margin-top:5px;display:none}
+.field.bad .err{display:block}
+.field.bad input,.field.bad select{border-color:var(--danger)}
+.btn{font:inherit;font-weight:500;font-size:15px;padding:12px 26px;border-radius:10px;border:1px solid var(--navy);background:var(--navy);color:#fff;cursor:pointer;transition:background .15s,transform .05s}
+.btn:hover{background:var(--navy-2)}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:#fff;color:var(--navy)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px}
+.warn{background:#fdecea;border:1px solid #f3b8b3;color:#7a1b15;border-radius:12px;padding:14px 16px;font-size:14px;margin-bottom:18px}
+.warn b{font-weight:600}
+.tbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.tag{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.chip{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px;padding:6px 14px;border-radius:999px;background:var(--gold-soft);color:#6d531b;font-variant-numeric:tabular-nums}
+.chip.low{background:#fdecea;color:var(--danger)}
+.pbar{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin-bottom:22px}
+.pbar div{height:100%;background:var(--gold);width:100%;transition:width .25s linear}
+.pbar.low div{background:var(--danger)}
+.qno{color:var(--muted);font-size:14px;margin-bottom:12px}
+.opt{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:#b9c3ce}
+.opt.sel{border-color:var(--navy-2);background:#f0f4f9}
+.opt .dot{flex:0 0 20px;height:20px;border-radius:50%;border:2px solid #aab4bf;position:relative}
+.opt.sel .dot{border-color:var(--navy-2)}
+.opt.sel .dot::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--navy-2)}
+.opt .txt{flex:1;font-size:15px}
+.grp{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;padding:12px 14px}
+.grp .txt{font-size:15px;margin-bottom:10px}
+.pick{display:flex;gap:8px}
+.pick button{flex:1;font:inherit;font-size:13px;font-weight:500;padding:8px 10px;border-radius:8px;border:1px solid #cfd6de;background:#fff;color:var(--muted);cursor:pointer}
+.pick button.m.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.pick button.l.on{background:var(--gold);border-color:var(--gold);color:#fff}
+.hint{font-size:13px;color:var(--muted);margin:2px 0 14px}
+.done{text-align:center;padding:36px 20px}
+.done .ic{width:60px;height:60px;border-radius:50%;background:#e4f4ec;color:var(--ok);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 16px}
+.spin{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--gold);border-radius:50%;margin:0 auto 14px;animation:s 1s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:0 16px 30px}
+@media(max-width:520px){.card{padding:20px}.hero{padding:34px 16px 78px}}
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <div class="brand"><i></i>Luzie Group</div>
+  <h1>Psikotes Rekrutmen — Luzie Group</h1>
+</div></header>
+
+<main id="app"></main>
+<footer>Jangan mengirimkan kata sandi melalui formulir ini.</footer>
+
+<script>
+/* =====================================================================
+   PENGATURAN — ubah bagian ini saja
+   ===================================================================== */
+const CONFIG = {
+  // ID formulir (sudah terisi dari link formulir Anda)
+  formId: "1FAIpQLSd7sRF3LV8HSj2E4bHcjv5mFLZ-o7HCAbQW_Ff8VCwDKUXvXw",
+
+  // ---------- PENGATURAN WAKTU ----------
+  defaultSeconds: 30,          // batas waktu per soal (detik) jika soal tidak punya batas sendiri
+  autoNextOnTimeout: true,     // true = waktu habis, otomatis lanjut ke soal berikutnya
+  allowBack: false,            // soal yang sudah lewat tidak bisa dibuka kembali
+  // Batas waktu khusus per bagian (kosongkan/null untuk memakai defaultSeconds)
+  sectionSeconds: { 1: null, 2: null },
+  // Batas waktu khusus per soal: tambahkan  seconds: 45  di dalam soal yang bersangkutan
+
+  // ---------- ID KOLOM GOOGLE FORM (entry.xxxxxxxxxx) ----------
+  // Ambil dari "Dapatkan link isi otomatis" di editor Google Form.
+  entries: {
+    nama:   "entry.XXXXXXXXX",
+    email:  "entry.XXXXXXXXX",
+    hp:     "entry.XXXXXXXXX",
+    posisi: "entry.XXXXXXXXX"
+  },
+  // Jumlah halaman pada Google Form (identitas + bagian 1 + bagian 2 = 0,1,2)
+  pageHistory: "0,1,2",
+
+  posisiOptions: [
+    "Content Creator","SPV Marketing Biro Umrah","Admin Investasi","Advertiser Meta Ads",
+    "Finance Accounting and Tax Supervisor","KOL Specialist","Staff Legal","Network Operation Center"
+  ],
+
+  // ---------- BAGIAN 1 : pilih yang PALING dan PALING TIDAK menggambarkan diri ----------
+  bagian1: {
+    title: "Bagian 1",
+    instruction: "12 kelompok pernyataan — pilih pernyataan yang paling dan yang paling tidak menggambarkan diri Anda.",
+    // Contoh isi (hapus tanda komentar & sesuaikan dengan soal asli):
+    // { statements: ["pernyataan A","pernyataan B","pernyataan C","pernyataan D"],
+    //   entryMost: "entry.111111111", entryLeast: "entry.222222222" },
+    items: []
+  },
+
+  // ---------- BAGIAN 2 : pilih satu pernyataan dari sepasang ----------
+  bagian2: {
+    title: "Bagian 2",
+    instruction: "50 pasang pernyataan — pilih satu pernyataan yang paling menggambarkan diri Anda.",
+    // Contoh isi:
+    // { statements: ["pernyataan A","pernyataan B"], entry: "entry.333333333" },
+    items: []
+  }
+};
+/* ===================== AKHIR PENGATURAN ===================== */
+
+const $app = document.getElementById('app');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const intro = {
+  head: "Selamat datang di tahap psikotes rekrutmen Luzie Group.",
+  lead: "Formulir ini terdiri dari dua bagian, dengan total perkiraan waktu pengerjaan ±15 menit:",
+  parts: [
+    "Bagian 1: 12 kelompok pernyataan — pilih pernyataan yang paling dan yang paling tidak menggambarkan diri Anda.",
+    "Bagian 2: 50 pasang pernyataan — pilih satu pernyataan yang paling menggambarkan diri Anda."
+  ],
+  rulesHead: "Petunjuk penting:",
+  rules: [
+    "Tidak ada jawaban yang benar atau salah. Jawablah dengan jujur sesuai keadaan Anda yang sebenarnya.",
+    "Jawablah secara spontan — jawaban pertama yang terlintas biasanya yang paling tepat. Usahakan tidak lebih dari ±30 detik per nomor.",
+    "Kerjakan sendiri, tanpa bantuan orang lain atau sumber lain.",
+    "Batas waktu pengiriman jawaban mengikuti keterangan pada email undangan yang Anda terima."
+  ],
+  foot: "Isi identitas di bawah ini terlebih dahulu, lalu kerjakan Bagian 1 dan Bagian 2 sampai selesai."
+};
+
+const seq = [{t:'identity'}];
+[1,2].forEach(n => {
+  const sec = CONFIG['bagian'+n];
+  if (sec.items.length) {
+    seq.push({t:'intro', n});
+    sec.items.forEach((it,i)=> seq.push({t:'q', n, i}));
+  }
+});
+seq.push({t:'submit'});
+
+const S = { pos:0, id:{nama:'',email:'',hp:'',posisi:'',lainnya:''}, a1:{}, a2:{}, timer:null, left:0, total:0 };
+
+function configIssues(){
+  const out=[];
+  Object.entries(CONFIG.entries).forEach(([k,v])=>{ if(/X{3,}/.test(v)) out.push('ID kolom identitas "'+k+'" belum diisi'); });
+  if(!CONFIG.bagian1.items.length) out.push('Soal Bagian 1 belum diisi');
+  if(!CONFIG.bagian2.items.length) out.push('Soal Bagian 2 belum diisi');
+  CONFIG.bagian1.items.forEach((it,i)=>{ if(!it.entryMost||!it.entryLeast) out.push('Bagian 1 soal '+(i+1)+': entry belum diisi'); });
+  CONFIG.bagian2.items.forEach((it,i)=>{ if(!it.entry) out.push('Bagian 2 soal '+(i+1)+': entry belum diisi'); });
+  return out;
+}
+
+function secSeconds(step){
+  const sec = CONFIG['bagian'+step.n];
+  const it = sec.items[step.i];
+  return it.seconds || CONFIG.sectionSeconds[step.n] || CONFIG.defaultSeconds;
+}
+
+function stopTimer(){ if(S.timer){ clearInterval(S.timer); S.timer=null; } }
+
+function render(){
+  stopTimer();
+  const st = seq[S.pos];
+  if(st.t==='identity') return renderIdentity();
+  if(st.t==='intro') return renderSectionIntro(st);
+  if(st.t==='q') return renderQuestion(st);
+  if(st.t==='submit') return submitAll();
+}
+
+function renderIdentity(){
+  const issues = configIssues();
+  const opts = CONFIG.posisiOptions.map(o=>`<option ${S.id.posisi===o?'selected':''}>${esc(o)}</option>`).join('')
+             + `<option ${S.id.posisi==='Lainnya'?'selected':''}>Lainnya</option>`;
+  $app.innerHTML = `
+  ${issues.length?`<div class="warn"><b>Pengaturan belum lengkap.</b> Buka file HTML ini dan lengkapi bagian PENGATURAN:<ul style="margin:8px 0 0;padding-left:18px">${issues.slice(0,6).map(i=>`<li>${esc(i)}</li>`).join('')}${issues.length>6?`<li>dan ${issues.length-6} lainnya</li>`:''}</ul></div>`:''}
+  <section class="card intro">
+    <p><b>${esc(intro.head)}</b></p>
+    <p>${esc(intro.lead)}</p>
+    <ul>${intro.parts.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>
+    <p>${esc(intro.rulesHead)}</p>
+    <ul>${intro.rules.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>
+    <div class="note">${esc(intro.foot)}</div>
+    <div style="font-size:13px;color:var(--muted)"><span class="req">*</span> Menunjukkan pertanyaan yang wajib diisi</div>
+  </section>
+  <section class="card">
+    <div class="steps"><span class="on"></span><span></span><span></span></div>
+    <h2>Identitas Kandidat</h2>
+    <p class="sub">Isi dengan data Anda yang sebenarnya.</p>
+    <div class="field" id="f-nama"><label class="f">Nama Lengkap <span class="req">*</span></label>
+      <input type="text" id="nama" autocomplete="name" placeholder="Jawaban Anda" value="${esc(S.id.nama)}"><div class="err">Ini adalah pertanyaan wajib</div></div>
+    <div class="field" id="f-email"><label class="f">Alamat Email <span class="req">*</span></label>
+      <input type="email" id="email" autocomplete="email" placeholder="Jawaban Anda" value="${esc(S.id.email)}"><div class="err">Masukkan alamat email yang valid</div></div>
+    <div class="field" id="f-hp"><label class="f">Nomor HP / WhatsApp <span class="req">*</span></label>
+      <input type="tel" id="hp" autocomplete="tel" placeholder="Jawaban Anda" value="${esc(S.id.hp)}"><div class="err">Masukkan nomor HP yang valid</div></div>
+    <div class="field" id="f-posisi"><label class="f">Posisi yang Dilamar <span class="req">*</span></label>
+      <select id="posisi"><option value="">Pilih</option>${opts}</select>
+      <input type="text" id="lainnya" placeholder="Tuliskan posisi lainnya" style="margin-top:8px;display:${S.id.posisi==='Lainnya'?'block':'none'}" value="${esc(S.id.lainnya)}">
+      <div class="err">Ini adalah pertanyaan wajib</div></div>
+    <div class="row"><span style="font-size:13px;color:var(--muted)">Halaman 1 dari ${seq.filter(s=>s.t==='intro').length+1}</span>
+      <button class="btn" id="next" ${issues.length?'disabled':''}>Berikutnya</button></div>
+  </section>`;
+  const sel = document.getElementById('posisi');
+  sel.onchange = () => { document.getElementById('lainnya').style.display = sel.value==='Lainnya'?'block':'none'; };
+  document.getElementById('next').onclick = () => {
+    const v = {nama:nama.value.trim(), email:email.value.trim(), hp:hp.value.trim(), posisi:sel.value, lainnya:lainnya.value.trim()};
+    const bad = {
+      nama: !v.nama,
+      email: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email),
+      hp: v.hp.replace(/\D/g,'').length < 9,
+      posisi: !v.posisi || (v.posisi==='Lainnya' && !v.lainnya)
+    };
+    Object.keys(bad).forEach(k=>document.getElementById('f-'+k).classList.toggle('bad',bad[k]));
+    if(Object.values(bad).some(Boolean)){ document.querySelector('.field.bad')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+    S.id = v; S.pos++; window.scrollTo({top:0}); render();
+  };
+}
+
+function renderSectionIntro(st){
+  const sec = CONFIG['bagian'+st.n];
+  const first = sec.items[0];
+  const secs = CONFIG.sectionSeconds[st.n] || CONFIG.defaultSeconds;
+  $app.innerHTML = `<section class="card">
+    <div class="steps"><span class="on"></span><span class="${st.n>=1?'on':''}"></span><span class="${st.n>=2?'on':''}"></span></div>
+    <h2>${esc(sec.title)}</h2>
+    <p class="sub">${esc(sec.instruction)}</p>
+    <div class="note">Setiap soal memiliki batas waktu sekitar <b>${secs} detik</b>. Saat waktu habis, soal akan lanjut otomatis${CONFIG.allowBack?'':' dan tidak dapat dibuka kembali'}. Timer dimulai setelah Anda menekan tombol di bawah.</div>
+    <div class="row"><span></span><button class="btn" id="go">Mulai ${esc(sec.title)}</button></div>
+  </section>`;
+  document.getElementById('go').onclick = () => { S.pos++; window.scrollTo({top:0}); render(); };
+}
+
+function renderQuestion(st){
+  const sec = CONFIG['bagian'+st.n];
+  const it = sec.items[st.i];
+  const total = sec.items.length;
+  const secs = secSeconds(st);
+  const store = st.n===1 ? S.a1 : S.a2;
+  const cur = store[st.i] || (st.n===1 ? {most:null,least:null} : {pick:null});
+  store[st.i] = cur;
+  const lastQ = !seq[S.pos+1] || seq[S.pos+1].t!=='q' || seq[S.pos+1].n!==st.n;
+
+  let body = '';
+  if(st.n===1){
+    body = `<p class="hint">Pilih satu pernyataan yang <b>paling</b> dan satu yang <b>paling tidak</b> menggambarkan diri Anda.</p>` +
+      it.statements.map((t,k)=>`<div class="grp"><div class="txt">${esc(t)}</div>
+        <div class="pick"><button class="m ${cur.most===k?'on':''}" data-k="${k}" data-r="most">Paling</button>
+        <button class="l ${cur.least===k?'on':''}" data-k="${k}" data-r="least">Paling tidak</button></div></div>`).join('');
+  } else {
+    body = `<p class="hint">Pilih satu pernyataan yang paling menggambarkan diri Anda.</p>` +
+      it.statements.map((t,k)=>`<div class="opt ${cur.pick===k?'sel':''}" data-k="${k}"><span class="dot"></span><span class="txt">${esc(t)}</span></div>`).join('');
+  }
+
+  $app.innerHTML = `<section class="card">
+    <div class="tbar"><span class="tag">${esc(sec.title)}</span>
+      <span class="chip" id="chip"><span id="sisa">${secs}</span> detik</span></div>
+    <div class="pbar" id="pbar"><div id="fill"></div></div>
+    <div class="qno">Soal ${st.i+1} dari ${total}</div>
+    ${body}
+    <div class="row">
+      ${CONFIG.allowBack && S.pos>1 ? '<button class="btn ghost" id="prev">Kembali</button>' : '<span></span>'}
+      <button class="btn" id="nx">${lastQ && seq[S.pos+1]?.t==='submit' ? 'Kirim' : 'Lanjut'}</button>
+    </div>
+    <div class="err" id="qerr" style="display:none;margin-top:10px;text-align:right">Lengkapi jawaban sebelum lanjut.</div>
+  </section>`;
+
+  if(st.n===1){
+    $app.querySelectorAll('.pick button').forEach(b=>b.onclick=()=>{
+      const k=+b.dataset.k, r=b.dataset.r, o = r==='most'?'least':'most';
+      cur[r]=k; if(cur[o]===k) cur[o]=null;
+      $app.querySelectorAll('.pick button').forEach(x=>{
+        const kk=+x.dataset.k, rr=x.dataset.r; x.classList.toggle('on', cur[rr]===kk);
+      });
+    });
+  } else {
+    $app.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{
+      cur.pick=+o.dataset.k; $app.querySelectorAll('.opt').forEach(x=>x.classList.toggle('sel',+x.dataset.k===cur.pick));
+    });
+  }
+
+  const advance = () => { stopTimer(); S.pos++; window.scrollTo({top:0}); render(); };
+  document.getElementById('nx').onclick = () => {
+    const ok = st.n===1 ? (cur.most!==null && cur.least!==null) : cur.pick!==null;
+    if(!ok){ document.getElementById('qerr').style.display='block'; return; }
+    advance();
+  };
+  const pv = document.getElementById('prev');
+  if(pv) pv.onclick = () => { stopTimer(); S.pos--; render(); };
+
+  // ---- timer ----
+  S.total = secs;
+  const deadline = Date.now() + secs*1000;
+  const tick = () => {
+    const ms = Math.max(0, deadline - Date.now());
+    const left = Math.ceil(ms/1000);
+    const sisa = document.getElementById('sisa'); if(!sisa) return;
+    sisa.textContent = left;
+    document.getElementById('fill').style.width = (ms/(secs*1000)*100)+'%';
+    const low = left <= 10;
+    document.getElementById('chip').classList.toggle('low',low);
+    document.getElementById('pbar').classList.toggle('low',low);
+    if(ms<=0){
+      stopTimer();
+      if(CONFIG.autoNextOnTimeout) advance();
+      else { document.getElementById('qerr').textContent='Waktu habis.'; document.getElementById('qerr').style.display='block'; }
+    }
+  };
+  tick();
+  S.timer = setInterval(tick, 200);
+}
+
+async function submitAll(){
+  $app.innerHTML = `<section class="card done"><div class="spin"></div><h2>Mengirim jawaban…</h2><p class="sub">Jangan tutup halaman ini.</p></section>`;
+  const E = CONFIG.entries, body = new URLSearchParams();
+  body.append(E.nama, S.id.nama);
+  body.append(E.email, S.id.email);
+  body.append(E.hp, S.id.hp);
+  if(S.id.posisi==='Lainnya'){ body.append(E.posisi,'__other_option__'); body.append(E.posisi+'.other_option_response', S.id.lainnya); }
+  else body.append(E.posisi, S.id.posisi);
+
+  CONFIG.bagian1.items.forEach((it,i)=>{
+    const a = S.a1[i] || {};
+    body.append(it.entryMost,  a.most  != null ? it.statements[a.most]  : '');
+    body.append(it.entryLeast, a.least != null ? it.statements[a.least] : '');
+  });
+  CONFIG.bagian2.items.forEach((it,i)=>{
+    const a = S.a2[i] || {};
+    body.append(it.entry, a.pick != null ? it.statements[a.pick] : '');
+  });
+  body.append('fvv','1');
+  body.append('pageHistory', CONFIG.pageHistory);
+
+  const url = `https://docs.google.com/forms/d/e/${CONFIG.formId}/formResponse`;
+  try{
+    await fetch(url,{method:'POST',mode:'no-cors',body});
+    $app.innerHTML = `<section class="card done"><div class="ic">✓</div><h2>Jawaban Anda telah terkirim</h2>
+      <p class="sub" style="margin:0">Terima kasih telah mengikuti psikotes rekrutmen Luzie Group. Tim kami akan menghubungi Anda sesuai informasi pada email undangan.</p></section>`;
+  }catch(e){
+    $app.innerHTML = `<section class="card done"><h2>Pengiriman gagal</h2>
+      <p class="sub">Periksa koneksi internet Anda, lalu coba kirim lagi.</p>
+      <button class="btn" id="retry">Kirim ulang</button></section>`;
+    document.getElementById('retry').onclick = submitAll;
+  }
+}
+
+render();
+</script>
+</body>
+</html>
