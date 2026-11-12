@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f2238">
 <title>Psikotes Rekrutmen — Luzie Group</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -79,6 +80,35 @@ input:focus,select:focus{outline:none;border-color:var(--navy-2);box-shadow:0 0 
 @keyframes s{to{transform:rotate(360deg)}}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:0 16px 30px}
 @media(max-width:520px){.card{padding:20px}.hero{padding:34px 16px 78px}}
+
+html,body{overscroll-behavior-y:none}
+input,select,button,.opt{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+input[type=text],input[type=email],input[type=tel],select{font-size:16px;min-height:48px}
+.btn{min-height:48px}
+.pick button{min-height:46px;font-size:14px}
+.opt{min-height:60px}
+.stick{position:sticky;top:0;z-index:20;background:var(--card);margin:-28px -28px 16px;padding:14px 28px 12px;border-radius:14px 14px 0 0;border-bottom:1px solid var(--line)}
+.stick .tbar{margin-bottom:8px;flex-wrap:nowrap;align-items:center}
+.stick .qno{margin:2px 0 0;font-size:14px}
+.stick .pbar{margin:0}
+.actions{position:sticky;bottom:0;z-index:20;background:var(--card);margin:16px -28px -28px;padding:12px 28px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);border-radius:0 0 14px 14px}
+.actions .row{margin-top:0}
+.actions .row>span:empty{display:none}
+.in-test .hero{display:none}
+.in-test main{margin-top:12px}
+@media(max-width:520px){
+  main{padding:0 12px;margin-bottom:40px}
+  .card{padding:18px}
+  .hero h1{font-size:24px}
+  .intro p,.intro ul{font-size:14.5px;line-height:1.6}
+  .stick{margin:-18px -18px 14px;padding:12px 18px 10px}
+  .actions{margin:14px -18px -18px;padding:10px 18px calc(10px + env(safe-area-inset-bottom))}
+  .actions .btn{flex:1}
+  .actions .btn.ghost{flex:0 0 auto}
+  .opt{padding:14px}
+  .chip{font-size:16px;padding:6px 14px}
+  .row .btn{min-width:130px}
+}
 </style>
 </head>
 <body>
@@ -105,6 +135,8 @@ const CONFIG = {
   // ---------- PENGATURAN WAKTU ----------
   defaultSeconds: 35,          // batas waktu per soal (detik) jika soal tidak punya batas sendiri
   autoNextOnTimeout: true,     // true = waktu habis, otomatis lanjut ke soal berikutnya
+  requireComplete: true,       // true = soal yang terlewat (waktu habis) wajib dilengkapi di akhir sebelum dikirim
+  maxCompletionRounds: 0,      // batas putaran melengkapi soal terlewat (0 = tanpa batas)
   oneAttempt: false,           // MASA UJI COBA: false. Ubah ke true saat sudah siap dipakai kandidat (1 kali per perangkat/browser)
   lockAfterStart: true,        // true = jika halaman ditutup/dimuat ulang setelah dimulai, tidak bisa diulang
   storageKey: 'luzie_psikotes_v1',
@@ -247,7 +279,7 @@ const seq = [{t:'identity'}];
 });
 seq.push({t:'submit'});
 
-const S = { pos:0, id:{nama:'',email:'',hp:'',posisi:'',lainnya:''}, a1:{}, a2:{}, timer:null, left:0, total:0 };
+const S = { review:false, queue:[], qi:0, round:0, pos:0, id:{nama:'',email:'',hp:'',posisi:'',lainnya:''}, a1:{}, a2:{}, timer:null, left:0, total:0 };
 
 function configIssues(){
   const out=[];
@@ -294,10 +326,11 @@ function stopTimer(){ if(S.timer){ clearInterval(S.timer); S.timer=null; } }
 function render(){
   stopTimer();
   const st = seq[S.pos];
+  document.body.classList.toggle('in-test', st.t==='q');
   if(st.t==='identity') return renderIdentity();
   if(st.t==='intro') return renderSectionIntro(st);
   if(st.t==='q') return renderQuestion(st);
-  if(st.t==='submit') return submitAll();
+  if(st.t==='submit') return beforeSubmit();
 }
 
 function renderIdentity(){
@@ -317,7 +350,8 @@ function renderIdentity(){
     <div class="note announce"><b>Pengumuman penting</b>
       <ul>
         <li>Setiap soal dibatasi waktu <b>${CONFIG.defaultSeconds} detik</b>.</li>
-        <li>Jika waktu terlewat, soal otomatis berpindah ke soal berikutnya dan jawaban yang belum dipilih dianggap kosong. Hal ini akan <b>memengaruhi hasil psikotes</b> Anda.</li>
+        <li>Jika waktu terlewat, soal otomatis berpindah ke soal berikutnya dan hal ini akan <b>memengaruhi hasil psikotes</b> Anda.</li>
+        ${CONFIG.requireComplete?'<li>Soal yang terlewat akan ditampilkan kembali di akhir dan <b>wajib dilengkapi</b> sebelum jawaban dapat dikirim. Batas waktu tetap berlaku.</li>':''}
         ${CONFIG.oneAttempt?'<li>Psikotes ini hanya dapat dikerjakan <b>satu kali</b>. Jangan menutup atau memuat ulang halaman setelah dimulai.</li>':''}
       </ul></div>
     <div style="font-size:13px;color:var(--muted)"><span class="req">*</span> Menunjukkan pertanyaan yang wajib diisi</div>
@@ -327,11 +361,11 @@ function renderIdentity(){
     <h2>Identitas Kandidat</h2>
     <p class="sub">Isi dengan data Anda yang sebenarnya.</p>
     <div class="field" id="f-nama"><label class="f">Nama Lengkap <span class="req">*</span></label>
-      <input type="text" id="nama" autocomplete="name" placeholder="Jawaban Anda" value="${esc(S.id.nama)}"><div class="err">Ini adalah pertanyaan wajib</div></div>
+      <input type="text" id="nama" autocomplete="name" autocapitalize="words" enterkeyhint="next" placeholder="Jawaban Anda" value="${esc(S.id.nama)}"><div class="err">Ini adalah pertanyaan wajib</div></div>
     <div class="field" id="f-email"><label class="f">Alamat Email <span class="req">*</span></label>
-      <input type="email" id="email" autocomplete="email" placeholder="Jawaban Anda" value="${esc(S.id.email)}"><div class="err">Masukkan alamat email yang valid</div></div>
+      <input type="email" id="email" autocomplete="email" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="next" placeholder="Jawaban Anda" value="${esc(S.id.email)}"><div class="err">Masukkan alamat email yang valid</div></div>
     <div class="field" id="f-hp"><label class="f">Nomor HP / WhatsApp <span class="req">*</span></label>
-      <input type="tel" id="hp" autocomplete="tel" placeholder="Jawaban Anda" value="${esc(S.id.hp)}"><div class="err">Masukkan nomor HP yang valid</div></div>
+      <input type="tel" id="hp" autocomplete="tel" inputmode="tel" enterkeyhint="done" placeholder="Jawaban Anda" value="${esc(S.id.hp)}"><div class="err">Masukkan nomor HP yang valid</div></div>
     <div class="field" id="f-posisi"><label class="f">Posisi yang Dilamar <span class="req">*</span></label>
       <select id="posisi"><option value="">Pilih</option>${opts}</select>
       <input type="text" id="lainnya" placeholder="Tuliskan posisi lainnya" style="margin-top:8px;display:${S.id.posisi==='Lainnya'?'block':'none'}" value="${esc(S.id.lainnya)}">
@@ -363,10 +397,52 @@ function renderSectionIntro(st){
     <div class="steps"><span class="on"></span><span class="${st.n>=1?'on':''}"></span><span class="${st.n>=2?'on':''}"></span></div>
     <h2>${esc(sec.title)}</h2>
     <p class="sub">${esc(sec.instruction)}</p>
-    <div class="note announce"><b>Batas waktu ${secs} detik per soal.</b> Jika terlewat, soal otomatis berpindah ke soal berikutnya dan memengaruhi hasil psikotes Anda. Timer dimulai setelah Anda menekan tombol di bawah.</div>
+    <div class="note announce"><b>Batas waktu ${secs} detik per soal.</b> Jika terlewat, soal otomatis berpindah ke soal berikutnya dan memengaruhi hasil psikotes Anda.${CONFIG.requireComplete?' Soal yang terlewat wajib dilengkapi di akhir.':''} Timer dimulai setelah Anda menekan tombol di bawah.</div>
     <div class="row"><span></span><button class="btn" id="go">Mulai ${esc(sec.title)}</button></div>
   </section>`;
   document.getElementById('go').onclick = () => { S.pos++; window.scrollTo({top:0}); render(); };
+}
+
+function isAnswered(st){
+  const cur = (st.n===1 ? S.a1 : S.a2)[st.i];
+  if(!cur) return false;
+  return st.n===1 ? (cur.most!=null && cur.least!=null) : cur.pick!=null;
+}
+function missingPositions(){
+  const out=[]; seq.forEach((st,i)=>{ if(st.t==='q' && !isAnswered(st)) out.push(i); }); return out;
+}
+function nextStep(){
+  window.scrollTo({top:0});
+  if(S.review){
+    S.qi++;
+    if(S.qi < S.queue.length){ S.pos = S.queue[S.qi]; return render(); }
+    S.review = false; return beforeSubmit();
+  }
+  S.pos++; render();
+}
+function beforeSubmit(){
+  S.review = false;
+  const miss = missingPositions();
+  if(!miss.length || !CONFIG.requireComplete) return submitAll();
+  if(CONFIG.maxCompletionRounds>0 && (S.round||0) >= CONFIG.maxCompletionRounds) return submitAll();
+  S.round = (S.round||0) + 1;
+  S.queue = miss; S.qi = 0;
+  const by = {1:[],2:[]};
+  miss.forEach(i=>{ const st=seq[i]; by[st.n].push(st.i+1); });
+  const rows = [1,2].filter(n=>by[n].length).map(n=>{
+    const sec = CONFIG['bagian'+n];
+    return `<li><b>${esc(sec.title)}</b> — ${esc(sec.unit)} ${by[n].join(', ')}</li>`;
+  }).join('');
+  const secs = secSeconds(seq[miss[0]]);
+  $app.innerHTML = `<section class="card">
+    <div class="steps"><span class="on"></span><span class="on"></span><span class="on"></span></div>
+    <h2>Masih ada soal yang belum terjawab</h2>
+    <p class="sub">Ada ${miss.length} soal yang terlewat karena waktu habis. Semua soal wajib dilengkapi sebelum jawaban dapat dikirim.</p>
+    <ul style="font-size:15px;margin:0 0 14px;padding-left:20px">${rows}</ul>
+    <div class="note announce"><b>Batas waktu ${secs} detik per soal tetap berlaku.</b> Jika waktu habis lagi, soal akan ditampilkan kembali sampai semuanya terjawab. Timer dimulai setelah Anda menekan tombol di bawah.</div>
+    <div class="row"><span></span><button class="btn" id="fix">Lengkapi sekarang</button></div>
+  </section>`;
+  document.getElementById('fix').onclick = () => { S.review = true; S.pos = S.queue[0]; window.scrollTo({top:0}); render(); };
 }
 
 function renderQuestion(st){
@@ -391,16 +467,20 @@ function renderQuestion(st){
   }
 
   $app.innerHTML = `<section class="card">
-    <div class="tbar"><span class="tag">${esc(sec.title)}</span>
-      <span class="chip" id="chip"><span id="sisa">${secs}</span> detik</span></div>
-    <div class="pbar" id="pbar"><div id="fill"></div></div>
-    <div class="qno">${esc(sec.unit)} ${st.i+1} dari ${total}</div>
-    ${body}
-    <div class="row">
-      ${CONFIG.allowBack && S.pos>1 ? '<button class="btn ghost" id="prev">Kembali</button>' : '<span></span>'}
-      <button class="btn" id="nx">${lastQ && seq[S.pos+1]?.t==='submit' ? 'Kirim' : 'Lanjut'}</button>
+    <div class="stick">
+      <div class="tbar"><div><span class="tag">${esc(sec.title)}</span><div class="qno">${esc(sec.unit)} ${st.i+1} dari ${total}</div></div>
+        <span class="chip" id="chip"><span id="sisa">${secs}</span> detik</span></div>
+      <div class="pbar" id="pbar"><div id="fill"></div></div>
     </div>
-    <div class="err" id="qerr" style="display:none;margin-top:10px;text-align:right">Lengkapi jawaban sebelum lanjut.</div>
+    ${S.review?`<div class="note announce" style="margin:0 0 14px"><b>Melengkapi soal yang terlewat</b> — ${S.qi+1} dari ${S.queue.length}</div>`:''}
+    ${body}
+    <div class="actions">
+      <div class="err" id="qerr" style="display:none;margin:0 0 8px;text-align:right">Lengkapi jawaban sebelum lanjut.</div>
+      <div class="row">
+        ${CONFIG.allowBack && S.pos>1 && !S.review ? '<button class="btn ghost" id="prev">Kembali</button>' : '<span></span>'}
+        <button class="btn" id="nx">${(S.review ? S.qi===S.queue.length-1 : seq[S.pos+1]?.t==='submit') ? 'Selesai' : 'Lanjut'}</button>
+      </div>
+    </div>
   </section>`;
 
   if(st.n===1){
@@ -417,7 +497,7 @@ function renderQuestion(st){
     });
   }
 
-  const advance = () => { stopTimer(); S.pos++; window.scrollTo({top:0}); render(); };
+  const advance = () => { stopTimer(); nextStep(); };
   document.getElementById('nx').onclick = () => {
     const ok = st.n===1 ? (cur.most!==null && cur.least!==null) : cur.pick!==null;
     if(!ok){ document.getElementById('qerr').style.display='block'; return; }
